@@ -1,0 +1,9 @@
+# Nothing here should be generated, but guard anyway.
+.env
+*.log
+.DS_Store
+
+# If someone installs a tool into this repo, do not commit it.
+.venv/
+node_modules/
+__pycache__/
