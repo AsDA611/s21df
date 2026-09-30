@@ -90,11 +90,11 @@ agent-pack/
 | File | Ukuran | Dipakai ketika |
 |------|--------|---------------|
 | `SOUL.md` | 3,2 KB | Selalu. Ini kepribadiannya. |
-| `AGENTS.md` | 9,6 KB | Selalu. Ini otak prosedurnya. |
-| `MEMORY.md` | 0,9 KB | Hanya sesi utama, bukan subagent. |
+| `AGENTS.md` | 8,5 KB | Selalu. Ini otak prosedurnya. |
+| `MEMORY.md` | 1,2 KB | Hanya sesi utama, bukan subagent. |
 | 9 modul skill | 2,2 KB | Hanya ketika cocok. |
 
-Total yang menempel di kepala AI: **sekitar 16.000 karakter**. Tidak banyak.
+Total yang menempel di kepala AI: **sekitar 15.000 karakter**. Tidak banyak.
 
 **Repo ini bisa dipakai di mana saja.** Semua path di dalamnya relatif, jadi boleh di-clone ke mana pun,
 disalin ke dalam project lain, atau diberi nama lain. Tidak ada yang bergantung pada nama folder.
@@ -171,10 +171,10 @@ Kalau jawabannya menunjukkan dia tahu aturanmu, berarti sudah membaca `AGENTS.md
 | "deploy ke server" | Berhenti dan bertanya, karena keluar dari mesin |
 | "tulis README untuk tool ini" | Modul `content` dimuat otomatis |
 
-Kamu **tidak perlu menyebut nama modunya**. Dia memilih sendiri dari isi kalimatmu. Kalau salah, dia
-menyebut modul mana yang dipakai.
+Kamu **tidak perlu menyebut nama modunya**. Dia memilih sendiri dari isi kalimatmu, lalu menyebutkan modul
+yang dia pakai di awal jawabannya. Kalau tidak ada yang cocok, dia bilang begitu.
 
-## 8. Tiga mode yang bisa kamu panggil
+## 8. Empat mode yang bisa kamu panggil
 
 - **deep** — untuk keputusan besar. Dia membandingkan beberapa opsi dulu sebelum memilih.
   Contoh: `deep: pakai Postgres atau SQLite?`
@@ -182,8 +182,32 @@ menyebut modul mana yang dipakai.
   pengecekan supaya bug yang sama Ketahuan kalau balik lagi.
 - **review** — untuk menilai kode orang lain. Hanya daftar temuan, tanpa pujian, tanpa saran di luar
   lingkup.
+- **audit** — untuk mencari kode yang kebanyakan. Dia daftar semua yang bisa dihapus, diurut dari yang
+  paling banyak hemat. Tidak mengubah apa pun.
 
-## 9. Batasnya: boleh dan tidak boleh
+## 9. Cara dia memilih kode yang paling sedikit
+
+Sebelum menulis apa pun, dia berhenti di anak tangga pertama yang cukup berlaku.
+
+1. Apa ini perlu ada? Tidak, jangan dibuat.
+2. Sudah ada di projek ini? Pakai ulang, jangan ditulis ulang.
+3. Ada di pustaka standar? Pakai itu.
+4. Ada fitur bawaan platform? Pakai itu. `<input type="date">`, bukan library date picker.
+5. Sudah ada dependensi yang terpasang? Pakai itu.
+6. Bisa satu baris? Ya, maka satu baris.
+7. Baru setelah itu: kode minimum yang benar-benar jalan.
+
+Contoh: minta "buat date picker". Jawabannya `<input type="date">` satu baris, bukan sebuah dependensi
+ditambah wrapper component ditambah stylesheet.
+
+Yang **tidak pernah** boleh dipotong demi hemat: validasi di batas kepercayaan, penanganan supaya data
+hilang, keamanan, dan aksesibilitas. Itu kebutuhan, bukan beban.
+
+Kalau dia sengaja memakai cara cepat, dia menulis satu baris komentar di lokasi itu, misalnya
+`ponytail: global lock, per-account locks kalau throughput jadi masalah`. Jadi cara cepat terlihat
+disengaja, bukan kelalaian.
+
+## 10. Batasnya: boleh dan tidak boleh
 
 Ini bagian paling penting, karena "_nya_" tidak akan berhenti sendiri di hal yang berbahaya.
 
@@ -202,19 +226,21 @@ Kalau kamu setuju, dia lanjut. Kalau tidak, dia berhenti.
 Lima kasus yang abu-abu sudah ditulis jelas di `AGENTS.md` bagian `Autonomy`. Tidak perlu dihafal, tapi
 baca sekali kalau kamu sering menyuruh pekerjaan berisiko.
 
-## 10. Memory — supaya tidak lupa
+## 11. Memory — supaya tidak lupa
 
-Dua tempat catatan:
+Dua tempat catatan. `MEMORY.md` datang sebagai **template kosong**: isinya contoh format, bukan fakta
+punya orang lain. Ganti dengan fakta kamu sendiri.
 
-- `memory/2026-09-30.md` — catatan harian: apa yang dikerjakan, apa yang rusak, apa yang diputuskan.
+- `memory/YYYY-MM-DD.md` — catatan harian: apa yang dikerjakan, apa yang rusak, apa yang diputuskan.
+  Foldernya sudah ada, isinya belum. `memory/.gitkeep` supaya folder tidak hilang.
 - `MEMORY.md` — fakta yang masih relevan setelah seminggu. Satu baris per fakta.
 
 Akhir setiap task, dia menulis satu baris: **apa yang tadi salah, dan masuk ke file mana**. Contoh:
-`2026-09-30 — install tanpa --user gagal di Termux, pakai --user`.
+`2026-01-15 — install tanpa --user gagal di Termux, pakai --user`.
 
-Kalau `_nya lupa`_ dan kamu tidak suka, isi sendiri `MEMORY.md`. Baca lagi dari awal di sesi berikutnya.
+Kalau "_nya lupa"_ dan kamu tidak suka, isi sendiri `MEMORY.md`. Baca lagi dari awal di sesi berikutnya.
 
-## 11. Sembilan modul
+## 12. Sembilan modul
 
 Dia memilih sendiri. Ini supaya kamu tahu saja:
 
@@ -233,7 +259,7 @@ Dia memilih sendiri. Ini supaya kamu tahu saja:
 Yang bikin hemat: yang menempel di kepala AI cuma **satu baris deskripsi per modul**. Isi modulnya baru
 dimuat kalau cocok. Total 2,2 KB, bukan 15 KB.
 
-## 12. Batasnya — baca juga
+## 13. Batasnya — baca juga
 
 - **File ini bukan sihir.** Cuma instruksi. Instruksi yang salah menghasilkan jawaban yang salah. README
   ini sendiri sudah salah beberapa kali dan diperbaiki.
@@ -243,7 +269,7 @@ dimuat kalau cocok. Total 2,2 KB, bukan 15 KB.
 - **Tidak ada yang berjalan otomatis.** Perulangan perbaikan itu atas permintaan: kalau diminta, dia
   jalan; kalau lupa, ya lupa.
 
-## 13. Kalau ada yang aneh
+## 14. Kalau ada yang aneh
 
 | Gejala | Penyebab | Perbaikan |
 |--------|---------|-----------|
